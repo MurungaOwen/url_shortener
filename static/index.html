@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-link text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">URL Shortener</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="healthStatus" class="flex items-center text-sm">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                        <span class="text-gray-600">Healthy</span>
+                    </span>
+                    <span id="totalUrls" class="text-sm text-gray-600">0 URLs</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Create URL Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Create Shortened URL</h2>
+            <form id="createUrlForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Original URL</label>
+                    <input type="url" id="originalUrl" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="https://example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Custom Code (Optional)</label>
+                    <input type="text" id="customCode"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="my-custom-code" pattern="^[a-zA-Z0-9_-]+$">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center justify-center">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Create Short URL
+                </button>
+            </form>
+            <div id="createResult" class="mt-4"></div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button onclick="switchTab('urls')" id="urlsTab"
+                        class="tab-button border-b-2 border-blue-600 text-blue-600 py-4 px-6 font-medium">
+                        <i class="fas fa-list mr-2"></i>URLs
+                    </button>
+                    <button onclick="switchTab('stats')" id="statsTab"
+                        class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-6 font-medium">
+                        <i class="fas fa-chart-bar mr-2"></i>Statistics
+                    </button>
+                    <button onclick="switchTab('search')" id="searchTab"
+                        class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-6 font-medium">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </nav>
+            </div>
+
+            <!-- URLs Tab Content -->
+            <div id="urlsContent" class="tab-content p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">All URLs</h3>
+                    <button onclick="loadUrls()" class="text-blue-600 hover:text-blue-700">
+                        <i class="fas fa-refresh mr-1"></i>Refresh
+                    </button>
+                </div>
+                <div id="urlsList" class="space-y-3"></div>
+            </div>
+
+            <!-- Stats Tab Content -->
+            <div id="statsContent" class="tab-content p-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Statistics</h3>
+                <div id="statsData"></div>
+            </div>
+
+            <!-- Search Tab Content -->
+            <div id="searchContent" class="tab-content p-6 hidden">
+                <div class="mb-4">
+                    <input type="text" id="searchQuery"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Search by short code or URL...">
+                </div>
+                <div id="searchResults" class="space-y-3"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg hidden transition-opacity">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

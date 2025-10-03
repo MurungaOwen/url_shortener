@@ -1,5 +1,5 @@
 // API Base URL
-const API_BASE = 'http://localhost:8000';
+const API_BASE = `${window.location.origin}`;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {

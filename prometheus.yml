@@ -1,0 +1,35 @@
+global:
+  # How frequently to scrape targets
+  scrape_interval: 15s
+
+  # How long until a scrape request times out
+  scrape_timeout: 10s
+
+  # How frequently to evaluate rules
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts
+  external_labels:
+    monitor: 'url-shortener'
+    environment: 'development'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # URL Shortener Application
+  - job_name: 'url-shortener'
+    scrape_interval: 5s  # More frequent scraping for development
+    scrape_timeout: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['localhost:8000']
+        labels:
+          service: 'url-shortener'
+          app: 'fastapi'
+          version: '1.0.0'

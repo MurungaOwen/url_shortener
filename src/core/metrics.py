@@ -1,5 +1,8 @@
 """Prometheus metrics definitions"""
 from prometheus_client import Counter, Histogram, Gauge
+import psutil
+import os
+import os
 
 
 # URL Creation Metrics
@@ -63,3 +66,52 @@ http_request_duration = Histogram(
     ['method', 'endpoint'],
     buckets=[0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
 )
+
+# Application Process Metrics
+process_cpu_percent_gauge = Gauge(
+    'process_cpu_usage_percent',
+    'CPU usage percentage of this application'
+)
+
+process_memory_usage_gauge = Gauge(
+    'process_memory_usage_bytes',
+    'Memory usage in bytes of this application'
+)
+
+process_memory_percent_gauge = Gauge(
+    'process_memory_usage_percent',
+    'Memory usage percentage of this application'
+)
+
+process_threads_gauge = Gauge(
+    'process_threads_count',
+    'Number of threads used by this application'
+)
+
+process_open_files_gauge = Gauge(
+    'process_open_files_count',
+    'Number of open file descriptors'
+)
+
+
+def update_system_metrics():
+    """Update application process metrics"""
+    process = psutil.Process(os.getpid())
+
+    # CPU usage of this app
+    process_cpu_percent_gauge.set(process.cpu_percent(interval=0.1))
+
+    # Memory usage of this app
+    mem_info = process.memory_info()
+    process_memory_usage_gauge.set(mem_info.rss)  # Resident Set Size
+    process_memory_percent_gauge.set(process.memory_percent())
+
+    # Thread count
+    process_threads_gauge.set(process.num_threads())
+
+    # Open files count
+    try:
+        process_open_files_gauge.set(len(process.open_files()))
+    except (psutil.AccessDenied, AttributeError):
+        # May not have permission on some systems
+        pass

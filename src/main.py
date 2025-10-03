@@ -113,6 +113,8 @@ def create_app() -> FastAPI:
         Returns:
             Prometheus metrics in text format
         """
+        # Update system metrics before returning
+        metrics.update_system_metrics()
         return FastAPIResponse(content=generate_latest(), media_type="text/plain")
 
     # UI Routes

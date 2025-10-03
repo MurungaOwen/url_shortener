@@ -11,3 +11,4 @@ prometheus-client==0.21.0
 
 # Optional: Python-dotenv for environment variables
 python-dotenv==1.0.1
+psutil
